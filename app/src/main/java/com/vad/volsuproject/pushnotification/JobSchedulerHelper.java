@@ -19,7 +19,6 @@ public class JobSchedulerHelper {
 
         JobScheduler scheduler =
                 (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-
         scheduler.schedule(jobInfo);
     }
 }
