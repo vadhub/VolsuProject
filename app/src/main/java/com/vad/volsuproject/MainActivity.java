@@ -13,7 +13,6 @@ import com.vad.volsuproject.socketresponse.Client;
 public class MainActivity extends AppCompatActivity {
 
     private WebView mWebView;
-    private String URL = "https://lk.volsu.ru/student/index";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +21,11 @@ public class MainActivity extends AppCompatActivity {
         //JobSchedulerHelper.jobScheduler(this);
 
         mWebView = (WebView) findViewById(R.id.webViewVolsu);
-        mWebView.setWebViewClient(new WebViewClient(){
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                view.loadUrl(URL);
-                return false;
-            }
-        });
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
+        mWebView.getSettings().setDatabaseEnabled(true);
+        mWebView.getSettings().setAppCacheEnabled(true);
+        mWebView.loadUrl("https://lk.volsu.ru/student/index");
 
 //        new Thread(new Runnable() {
 //            @Override
