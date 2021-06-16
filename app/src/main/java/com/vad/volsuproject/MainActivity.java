@@ -1,8 +1,10 @@
 package com.vad.volsuproject;
 
 import android.os.Bundle;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,17 +22,22 @@ public class MainActivity extends AppCompatActivity {
         //JobSchedulerHelper.jobScheduler(this);
 
         mWebView = (WebView) findViewById(R.id.webViewVolsu);
-        mWebView.loadUrl(URL);
+        mWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                view.loadUrl(URL);
+                return false;
+            }
+        });
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Client client = new Client();
-                client.getMessage();
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                client.getMessage();
+//            }
+//        }).start();
 
     }
 

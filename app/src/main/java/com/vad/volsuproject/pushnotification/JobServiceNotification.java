@@ -10,7 +10,7 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 
 import com.vad.volsuproject.R;
-import com.vad.volsuproject.notification.NotificationHelper;
+
 import com.vad.volsuproject.websector.Notificate;
 import com.vad.volsuproject.websector.RetrofitClient;
 
@@ -22,6 +22,7 @@ import retrofit2.Response;
 
 public class JobServiceNotification extends JobService {
 
+    private static final String CHANNEL_ID = "idchennal";
     private Thread thread;
 
     private SharedPreferences sPref;
@@ -71,7 +72,7 @@ public class JobServiceNotification extends JobService {
     }
 
     private void showNotification(String title, String text){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NotificationHelper.CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

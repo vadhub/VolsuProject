@@ -5,8 +5,6 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 
-import java.util.concurrent.TimeUnit;
-
 public class JobSchedulerHelper {
 
     private final static int JOB_ID = 12340;

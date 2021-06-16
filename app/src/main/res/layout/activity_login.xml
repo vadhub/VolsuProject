@@ -14,10 +14,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        cardCornerRadius="8dp"
-        cardElevation="8dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp"
         android:layout_margin="64dp"
-        android:background="#fff"
+        android:background="#ffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,6 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:enabled="false"
+                android:onClick="onClickLogin"
                 android:text="@string/action_sign_in" />
         </LinearLayout>
 
