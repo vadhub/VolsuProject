@@ -1,6 +1,7 @@
 package com.vad.volsuproject;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -43,14 +44,30 @@ public class MainActivity extends AppCompatActivity {
         mWebView.getSettings().setDomStorageEnabled(true);
         mWebView.getSettings().setDatabaseEnabled(true);
         mWebView.getSettings().setAppCacheEnabled(true);
-        mWebView.loadUrl("https://lk.volsu.ru/student/index");
+        mWebView.getSettings().setUserAgentString("Chrome/56.0.0 Mobile");
 
         mWebView.setWebViewClient(new WebViewClient(){
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                mProgressBar.setVisibility(View.VISIBLE);
+                return true;
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+            }
+
             @Override
             public void onPageFinished(WebView view, String url) {
-                mProgressBar.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(MainActivity.this, "Finish", Toast.LENGTH_SHORT).show();
+                super.onPageFinished(view, url);
+
             }
         });
+        mWebView.loadUrl("https://developer.android.com/guide?hl=en");
 
         //items from datastorege
         //_ym_uid
@@ -59,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
 
         getItemDatastorege("_ym_uid");
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                client.getMessage();
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                client.getMessage();
+//            }
+//        }).start();
 
     }
 
