@@ -1,5 +1,6 @@
 package com.vad.volsuproject;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.webkit.ValueCallback;
@@ -20,11 +21,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         //JobSchedulerHelper.jobScheduler(this);
+
+        Client client = new Client();
 
         mWebView = (WebView) findViewById(R.id.webViewVolsu);
 
@@ -44,12 +48,12 @@ public class MainActivity extends AppCompatActivity {
 
         getItemDatastorege("_ym_uid");
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                client.getMessage();
-//            }
-//        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                client.getMessage();
+            }
+        }).start();
 
     }
 
