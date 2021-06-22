@@ -46,28 +46,7 @@ public class MainActivity extends AppCompatActivity {
         mWebView.getSettings().setAppCacheEnabled(true);
         mWebView.getSettings().setUserAgentString("Chrome/56.0.0 Mobile");
 
-        mWebView.setWebViewClient(new WebViewClient(){
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                mProgressBar.setVisibility(View.VISIBLE);
-                return true;
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                mProgressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(MainActivity.this, "Finish", Toast.LENGTH_SHORT).show();
-                super.onPageFinished(view, url);
-
-            }
-        });
-        mWebView.loadUrl("https://developer.android.com/guide?hl=en");
+        mWebView.loadUrl("https://lk.volsu.ru/student/index");
 
         //items from datastorege
         //_ym_uid
@@ -128,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, ""+value, Toast.LENGTH_SHORT).show();
                     }
                 });
+
+                mProgressBar.setVisibility(View.INVISIBLE);
                 super.onPageFinished(view, url);
             }
         });
