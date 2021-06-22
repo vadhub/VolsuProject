@@ -3,11 +3,13 @@ package com.vad.volsuproject;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import com.vad.volsuproject.socketresponse.Client;
 public class MainActivity extends AppCompatActivity {
 
     private WebView mWebView;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         Client client = new Client();
 
         mWebView = (WebView) findViewById(R.id.webViewVolsu);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         //enable js
         mWebView.getSettings().setJavaScriptEnabled(true);
@@ -40,6 +44,13 @@ public class MainActivity extends AppCompatActivity {
         mWebView.getSettings().setDatabaseEnabled(true);
         mWebView.getSettings().setAppCacheEnabled(true);
         mWebView.loadUrl("https://lk.volsu.ru/student/index");
+
+        mWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                mProgressBar.setVisibility(View.GONE);
+            }
+        });
 
         //items from datastorege
         //_ym_uid
