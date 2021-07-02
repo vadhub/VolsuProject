@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.vad.volsuproject.pushnotification.JobSchedulerHelper;
 import com.vad.volsuproject.socketresponse.Client;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //JobSchedulerHelper.jobScheduler(this);
+        JobSchedulerHelper.jobScheduler(this);
 
         Client client = new Client();
 
@@ -107,9 +108,16 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, ""+value, Toast.LENGTH_SHORT).show();
                     }
                 });
-
+                mWebView.setAlpha(1);
                 mProgressBar.setVisibility(View.INVISIBLE);
                 super.onPageFinished(view, url);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                mWebView.setAlpha((float) 0.5);
+                mProgressBar.setVisibility(View.VISIBLE);
+                return true;
             }
         });
     }

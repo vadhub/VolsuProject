@@ -1,10 +1,12 @@
 package com.vad.volsuproject.pushnotification;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -22,12 +24,14 @@ import retrofit2.Response;
 
 public class JobServiceNotification extends JobService {
 
-    private static final String CHANNEL_ID = "idchennal";
+    private static final String CHANNEL_ID = "idChannelVolsu";
+    private static final int notificationId = 133344;
     private Thread thread;
 
     private SharedPreferences sPref;
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
+        createNotificationChannel();
         if(thread==null){
             thread = new Thread(new Runnable() {
                 @Override
@@ -71,6 +75,24 @@ public class JobServiceNotification extends JobService {
         });
     }
 
+    private void createNotificationChannel(){
+
+        //NotificationManager.IMPORTANCE_HIGH - sound and interrupt height, with image in toolbar
+        //NotificationManager.IMPORTANCE_DEFAULT - sound and interrupt not, with image in toolbar
+        //NotificationManager.IMPORTANCE_LOW - without sound and interrupt not, without image in toolbar
+        //NotificationManager.IMPORTANCE_MIN - the same as NotificationManager.IMPORTANCE_LOW
+        //NotificationManager.IMPORTANCE_NONE - without notification
+        //NotificationManager.IMPORTANCE_UNSPECIFIED - the same as NotificationManager.IMPORTANCE_LOW
+
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "notificationChannel";
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(notificationChannel);
+        }
+    }
+
     private void showNotification(String title, String text){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -82,7 +104,8 @@ public class JobServiceNotification extends JobService {
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notification);
+        notificationManager.notify(notificationId, notification);
+
     }
 
     private void save(String temp){
