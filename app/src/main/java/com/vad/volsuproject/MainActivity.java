@@ -1,13 +1,10 @@
 package com.vad.volsuproject;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.ValueCallback;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -16,13 +13,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.vad.volsuproject.pushnotification.JobSchedulerHelper;
-import com.vad.volsuproject.socketresponse.Client;
 
 public class MainActivity extends AppCompatActivity {
 
     private WebView mWebView;
     private ProgressBar mProgressBar;
+    private boolean isRedirect = false;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         JobSchedulerHelper.jobScheduler(this);
 
-        Client client = new Client();
-
         mWebView = (WebView) findViewById(R.id.webViewVolsu);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -44,24 +40,18 @@ public class MainActivity extends AppCompatActivity {
         //for get data from datastorage
         mWebView.getSettings().setDomStorageEnabled(true);
         mWebView.getSettings().setDatabaseEnabled(true);
+        mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setAppCacheEnabled(true);
-        mWebView.getSettings().setUserAgentString("Chrome/56.0.0 Mobile");
-
-        mWebView.loadUrl("https://lk.volsu.ru/student/index");
+        mWebView.getSettings().setUseWideViewPort(true);
 
         //items from datastorege
         //_ym_uid
         //_ym_cc
         //_ym_zzlc
 
-        getItemDatastorege("_ym_uid");
+        getItemDataStorage("_ym_uid");
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                client.getMessage();
-//            }
-//        }).start();
+        mWebView.loadUrl("https://lk.volsu.ru/student/index");
 
     }
 
@@ -78,46 +68,49 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_BACK:
-                    if (mWebView.canGoBack()) {
-                        mWebView.goBack();
-                    } else {
-                        finish();
-                    }
-                    return true;
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (mWebView.canGoBack()) {
+                    mWebView.goBack();
+                } else {
+                    finish();
+                }
+                return true;
             }
 
         }
         return super.onKeyDown(keyCode, event);
     }
 
-    private void getItemDatastorege(String item){
+    private void getItemDataStorage(String item) {
         String script = "(function(){" +
-                "var x = ''; "+
-                "  x = x + localStorage.key(3); x = x + ': '; x = x + localStorage.getItem('"+item+"');" +
+                "var x = ''; " +
+                "  x = x + localStorage.key(3); x = x + ': '; x = x + localStorage.getItem('" + item + "');" +
                 "return x;" +
                 "})();";
 
-        mWebView.setWebViewClient(new WebViewClient(){
+        mWebView.setWebViewClient(new WebViewClient() {
+
             @Override
-            public void onPageFinished(WebView view, String url) {
-                view.evaluateJavascript(script, new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        Toast.makeText(MainActivity.this, ""+value, Toast.LENGTH_SHORT).show();
-                    }
-                });
-                mWebView.setAlpha(1);
-                mProgressBar.setVisibility(View.INVISIBLE);
-                super.onPageFinished(view, url);
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.evaluateJavascript(script, value -> Toast.makeText(MainActivity.this, "" + value, Toast.LENGTH_SHORT).show());
+                view.loadUrl(url);
+                isRedirect = true;
+                return false;
             }
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                mWebView.setAlpha((float) 0.5);
-                mProgressBar.setVisibility(View.VISIBLE);
-                return true;
+            public void onLoadResource(WebView view, String url) {
+                if (!isRedirect) {
+                    view.setAlpha((float) 0.5);
+                    mProgressBar.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                isRedirect = true;
+                view.setAlpha(1);
+                mProgressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
