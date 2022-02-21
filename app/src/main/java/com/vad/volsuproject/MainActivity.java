@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        JobSchedulerHelper.jobScheduler(this);
 
         mWebView = (WebView) findViewById(R.id.webViewVolsu);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
